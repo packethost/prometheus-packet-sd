@@ -15,29 +15,14 @@ You need your Packet Auth token. You can create the token [in the Packet web app
 Download the binary from the [Releases](https://github.com/packethost/prometheus-packet-sd/releases) page.
 
 ## Running it
-host
-```
-usage: sd adapter usage --packet.token-file=my-token.txt [<flags>]
 
-Tool to generate Prometheus file_sd target files for Packet.
-
-Flags:
-  -h, --help                    Show context-sensitive help (also try --help-long and --help-man).
-      --output.file="packet.json"  The output filename for file_sd compatible file.
-      --packet.organization=SCW.ORGANIZATION
-                                The Packet organization.
-      --packet.region="par1"       The Packet region. Leaving blank will fetch from all the regions.
-      --packet.token-file=""       The authentication token file containing Packet Secret Key.
-      --target.refresh=30       The refresh interval (in seconds).
-      --target.port=80          The default port number for targets.
-      --web.listen-address=":9465"
-                                The listen address.
-      --version                 Show application version.
-```
+TODO: write this
 
 ## Integration with Prometheus
 
 Here is a Prometheus `scrape_config` snippet that configures Prometheus to scrape node_exporter assuming that it is deployed on all your Packet servers.
+
+TODO: update this section
 
 ```yaml
 - job_name: node
