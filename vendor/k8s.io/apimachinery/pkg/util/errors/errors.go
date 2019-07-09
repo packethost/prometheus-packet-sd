@@ -19,12 +19,7 @@ package errors
 import (
 	"errors"
 	"fmt"
-
-	"k8s.io/apimachinery/pkg/util/sets"
 )
-
-// MessageCountMap contains occurrence for each error message.
-type MessageCountMap map[string]int
 
 // Aggregate represents an object that contains multiple errors, but does not
 // necessarily have singular semantic meaning.
@@ -69,38 +64,12 @@ func (agg aggregate) Error() string {
 	if len(agg) == 1 {
 		return agg[0].Error()
 	}
-	seenerrs := sets.NewString()
-	result := ""
-	agg.visit(func(err error) {
-		msg := err.Error()
-		if seenerrs.Has(msg) {
-			return
-		}
-		seenerrs.Insert(msg)
-		if len(seenerrs) > 1 {
-			result += ", "
-		}
-		result += msg
-	})
-	if len(seenerrs) == 1 {
-		return result
+	result := fmt.Sprintf("[%s", agg[0].Error())
+	for i := 1; i < len(agg); i++ {
+		result += fmt.Sprintf(", %s", agg[i].Error())
 	}
-	return "[" + result + "]"
-}
-
-func (agg aggregate) visit(f func(err error)) {
-	for _, err := range agg {
-		switch err := err.(type) {
-		case aggregate:
-			err.visit(f)
-		case Aggregate:
-			for _, nestedErr := range err.Errors() {
-				f(nestedErr)
-			}
-		default:
-			f(err)
-		}
-	}
+	result += "]"
+	return result
 }
 
 // Errors is part of the Aggregate interface.
@@ -174,22 +143,6 @@ func Flatten(agg Aggregate) Aggregate {
 				result = append(result, err)
 			}
 		}
-	}
-	return NewAggregate(result)
-}
-
-// CreateAggregateFromMessageCountMap converts MessageCountMap Aggregate
-func CreateAggregateFromMessageCountMap(m MessageCountMap) Aggregate {
-	if m == nil {
-		return nil
-	}
-	result := make([]error, 0, len(m))
-	for errStr, count := range m {
-		var countStr string
-		if count > 1 {
-			countStr = fmt.Sprintf(" (repeated %v times)", count)
-		}
-		result = append(result, fmt.Errorf("%v%v", errStr, countStr))
 	}
 	return NewAggregate(result)
 }

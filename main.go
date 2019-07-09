@@ -16,13 +16,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/alecthomas/kingpin"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/packethost/packngo"
@@ -36,14 +36,13 @@ import (
 var (
 	a         = kingpin.New("sd adapter usage", "Tool to generate Prometheus file_sd target files for Packet.")
 	outputf   = a.Flag("output.file", "The output filename for file_sd compatible file.").Default("packet.json").String()
-	projectid = a.Flag("packet.projectid", "Packet project ID.").Default("").String()
-	tokenf    = a.Flag("packet.authtoken-file", "File containing Packet auth token.").Default("").String()
+	projectid = a.Flag("packet.projectid", "Packet project ID.").Envar("PACKET_PROJECT_ID").Required().String()
+	token     = a.Flag("packet.authtoken", "Packet auth token.").Envar("PACKET_AUTH_TOKEN").Required().String()
 	refresh   = a.Flag("target.refresh", "The refresh interval (in seconds).").Default("30").Int()
-	port      = a.Flag("target.port", "The default port number for targets.").Default("80").Int()
+	port      = a.Flag("target.port", "The default port number for targets.").Default("9100").Int()
 	listen    = a.Flag("web.listen-address", "The listen address.").Default(":9465").String()
 
 	packetPrefix = model.MetaLabelPrefix + "packet_"
-	// archLabel is the name for the label containing the server's architecture.
 )
 
 var (
@@ -108,7 +107,7 @@ func (l *packetLogger) Println(v ...interface{}) {
 
 // packetDiscoverer retrieves target information from the Packet API.
 type packetDiscoverer struct {
-	client    *api.PacketAPI
+	client    *packngo.Client
 	port      int
 	refresh   int
 	separator string
@@ -125,7 +124,7 @@ func (d *packetDiscoverer) createTarget(device *packngo.Device) *targetgroup.Gro
 	if len(device.Tags) > 0 {
 		tags = d.separator + strings.Join(device.Tags, d.separator) + d.separator
 	}
-	networkInfo = device.GetNetworkInfo()
+	networkInfo := device.GetNetworkInfo()
 
 	addr := net.JoinHostPort(networkInfo.PrivateIPv4, fmt.Sprintf("%d", d.port))
 
@@ -147,34 +146,35 @@ func (d *packetDiscoverer) createTarget(device *packngo.Device) *targetgroup.Gro
 			model.LabelName(labelName("private_ipv4")):  model.LabelValue(networkInfo.PrivateIPv4),
 			model.LabelName(labelName("public_ipv4")):   model.LabelValue(networkInfo.PublicIPv4),
 			model.LabelName(labelName("public_ipv6")):   model.LabelValue(networkInfo.PublicIPv6),
+			model.LabelName(labelName("tags")):          model.LabelValue(tags),
 		},
 	}
 }
 
 func (d *packetDiscoverer) getTargets() ([]*targetgroup.Group, error) {
 	now := time.Now()
-	devices, err := d.client.Devices.List(projectid, nil)
+	devices, _, err := d.client.Devices.List(*projectid, nil)
 	requestDuration.Observe(time.Since(now).Seconds())
 	if err != nil {
 		requestFailures.Inc()
 		return nil, err
 	}
 
-	level.Debug(d.logger).Log("msg", "get servers", "nb", len(devices))
+	level.Debug(d.logger).Log("msg", "get devices", "nb", len(devices))
 
 	current := make(map[string]struct{})
 	tgs := make([]*targetgroup.Group, len(devices))
 	for _, device := range devices {
 		tg := d.createTarget(&device)
-		level.Debug(d.logger).Log("msg", "server added", "source", tg.Source)
+		level.Debug(d.logger).Log("msg", "device added", "source", tg.Source)
 		current[tg.Source] = struct{}{}
 		tgs = append(tgs, tg)
 	}
 
-	// Add empty groups for servers which have been removed since the last refresh.
+	// Add empty groups for devices which have been removed since the last refresh.
 	for k := range d.lasts {
 		if _, ok := current[k]; !ok {
-			level.Debug(d.logger).Log("msg", "server deleted", "source", k)
+			level.Debug(d.logger).Log("msg", "device deleted", "source", k)
 			tgs = append(tgs, &targetgroup.Group{Source: k})
 		}
 	}
@@ -218,37 +218,9 @@ func main() {
 		),
 	}
 
-	token := ""
+	client := packngo.NewClientWithAuth("prometheus_sd", *token, nil)
 
-	if *tokenf == "" {
-		fmt.Println("need to pass --packet.authtoken-file")
-		os.Exit(1)
-	}
-	if *tokenf != "" {
-		b, err := ioutil.ReadFile(*tokenf)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		token = strings.TrimSpace(strings.TrimRight(string(b), "\n"))
-	}
-
-	client := packngo.NewClientWithAuth("prometheus_sd", token, nil)
-
-	//client, err := api.NewPacketAPI(
-	//	*organization,
-	// token,
-	//	"Prometheus/SD-Agent",
-	//	func(s *api.PacketAPI) {
-	//		s.Logger = logger
-	//	},
-	//)
-	//if err != nil {
-	//	fmt.Println("failed to create Packet API client:", err)
-	// 	os.Exit(1)
-	//}
-
-	_, _, err = client.User()
+	_, _, err = client.Projects.List(nil)
 	if err != nil {
 		fmt.Println("failed to check Packet credentials:", err)
 		os.Exit(1)

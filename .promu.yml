@@ -1,5 +1,5 @@
 repository:
-    path: github.com/packethost/prometheus-packet-sd
+    path: github.com/t0mk/prometheus-packet-sd
 build:
     binaries:
         - name: prometheus-packet-sd

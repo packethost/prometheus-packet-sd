@@ -1,0 +1,36 @@
+[
+    {
+        "targets": [
+            "10.99.17.131:9100"
+        ],
+        "labels": {
+            "__address__": "10.99.17.131:9100",
+            "__meta_packet_billing_cycle": "hourly",
+            "__meta_packet_facility": "ewr1",
+            "__meta_packet_hostname": "test",
+            "__meta_packet_plan": "m1.xlarge.x86",
+            "__meta_packet_private_ipv4": "10.99.17.131",
+            "__meta_packet_public_ipv4": "147.75.38.181",
+            "__meta_packet_public_ipv6": "2604:1380:4:200::3",
+            "__meta_packet_state": "active",
+            "__meta_packet_tags": ""
+        }
+    },
+    {
+        "targets": [
+            "10.99.17.129:9100"
+        ],
+        "labels": {
+            "__address__": "10.99.17.129:9100",
+            "__meta_packet_billing_cycle": "hourly",
+            "__meta_packet_facility": "ewr1",
+            "__meta_packet_hostname": "dev",
+            "__meta_packet_plan": "baremetal_0",
+            "__meta_packet_private_ipv4": "10.99.17.129",
+            "__meta_packet_public_ipv4": "147.75.79.229",
+            "__meta_packet_public_ipv6": "2604:1380:4:200::1",
+            "__meta_packet_state": "active",
+            "__meta_packet_tags": ""
+        }
+    }
+]
