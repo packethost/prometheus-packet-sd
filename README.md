@@ -10,6 +10,8 @@ This service gets the list of servers from the Packet API and generates a file w
 
 You need your Packet Auth token. You can create the token [in the Packet web app](https://app.packet.net), click on your profile photo and navigate to "API Keys".
 
+Make sure the Packet Auth Token is in envvar `PACKET_AUTH_TOKEN`.
+
 ## Installing it
 
 Download the binary from the [Releases](https://github.com/packethost/prometheus-packet-sd/releases) page.
@@ -19,6 +21,8 @@ Download the binary from the [Releases](https://github.com/packethost/prometheus
 ```
 $ ./prometheus-packet-sd --packet.projectid 508b7fd3-0df2-4837-b0df-65aaf09f642a
 ```
+
+You can also pass the project ID in envvar `PACKET_PROJECT_ID`.
 
 
 ## Integration with Prometheus
