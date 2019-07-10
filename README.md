@@ -16,7 +16,28 @@ Download the binary from the [Releases](https://github.com/packethost/prometheus
 
 ## Running it
 
-TODO: write this
+```
+> ./prometheus-packet-sd --help
+usage: sd adapter usage --packet.projectid=PACKET.PROJECTID --packet.authtoken=PACKET.AUTHTOKEN [<flags>]
+
+Tool to generate Prometheus file_sd target files for Packet.
+
+Flags:
+  -h, --help               Show context-sensitive help (also try --help-long and
+                           --help-man).
+      --output.file="packet.json"  
+                           The output filename for file_sd compatible file.
+      --packet.projectid=PACKET.PROJECTID  
+                           Packet project ID.
+      --packet.authtoken=PACKET.AUTHTOKEN  
+                           Packet auth token.
+      --target.refresh=30  The refresh interval (in seconds).
+      --target.port=9100   The default port number for targets.
+      --web.listen-address=":9465"  
+                           The listen address.
+      --version            Show application version.
+```
+
 
 ## Integration with Prometheus
 
@@ -51,24 +72,16 @@ TODO: update this section
 
 The following meta labels are available on targets during relabeling:
 
-* `__meta_packet_architecture`: the architecture of the server.
-* `__meta_packet_blade_id`: the identifier of the blade (can be empty).
-* `__meta_packet_chassis_id`: the identifier of the chassis (can be empty).
-* `__meta_packet_cluster_id`: the identifier of the cluster (can be empty).
-* `__meta_packet_commercial_type`: the commercial type of the server (eg START1-XS).
-* `__meta_packet_hypervisor_id`: the identifier of the hypervisor.
-* `__meta_packet_identifier`: the identifier of the server.
-* `__meta_packet_image_id`: the identifier of the server's image.
-* `__meta_packet_image_name`: the name of the server's image.
-* `__meta_packet_name`: the name of the server.
-* `__meta_packet_node_id`: the identifier of the node.
-* `__meta_packet_organization`: the organization owning the server.
-* `__meta_packet_platform_id`: the identifier of the platform.
-* `__meta_packet_private_ip`: the private IP address of the server.
-* `__meta_packet_public_ip`: the public IP address of the server (can be empty).
-* `__meta_packet_state`: the state of the server.
-* `__meta_packet_tags`: comma-separated list of tags associated to the server (trailing commas on both sides).
-* `__meta_packet_zone_id`: the identifier of the zone (region).
+* `__meta_packet_billing_cycle`
+* `__meta_packet_facility`
+* `__meta_packet_hostname`
+* `__meta_packet_plan`
+* `__meta_packet_private_ipv4`
+* `__meta_packet_public_ipv4`
+* `__meta_packet_public_ipv6`
+* `__meta_packet_state`
+* `__meta_packet_tags`
+
 
 
 ## Contributing
