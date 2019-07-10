@@ -17,25 +17,7 @@ Download the binary from the [Releases](https://github.com/packethost/prometheus
 ## Running it
 
 ```
-> ./prometheus-packet-sd --help
-usage: sd adapter usage --packet.projectid=PACKET.PROJECTID --packet.authtoken=PACKET.AUTHTOKEN [<flags>]
-
-Tool to generate Prometheus file_sd target files for Packet.
-
-Flags:
-  -h, --help               Show context-sensitive help (also try --help-long and
-                           --help-man).
-      --output.file="packet.json"  
-                           The output filename for file_sd compatible file.
-      --packet.projectid=PACKET.PROJECTID  
-                           Packet project ID.
-      --packet.authtoken=PACKET.AUTHTOKEN  
-                           Packet auth token.
-      --target.refresh=30  The refresh interval (in seconds).
-      --target.port=9100   The default port number for targets.
-      --web.listen-address=":9465"  
-                           The listen address.
-      --version            Show application version.
+$ ./prometheus-packet-sd --packet.projectid 508b7fd3-0df2-4837-b0df-65aaf09f642a
 ```
 
 
