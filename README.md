@@ -55,22 +55,23 @@ TODO: update this section
   # The relabeling does the following:
   # - overwrite the scrape address with the node_exporter's port.
   # - strip leading commas from the tags label.
-  # - save the region label (par1/ams1).
-  # - overwrite the instance label with the server's name.
+  # - save the facility label
+  # - save the hostname label
   relabel_configs:
-  - source_labels: [__meta_packet_private_ip]
+  - source_labels: [__meta_packet_public_ipv4]
     replacement: "${1}:9100"
     target_label: __address__
   - source_labels: [__meta_packet_tags]
     regex: ",(.+),"
     target_label: tags
-  - source_labels: [__meta_packet_location_zone_id]
-    target_label: region
-  - source_labels: [__meta_packet_name]
-    target_label: instance
+  - source_labels: [__meta_packet_facility]
+    target_label: facility
+  - source_labels: [__meta_packet_hostname]
+    target_label: hostname
+
 ```
 
-The following meta labels are available on targets during relabeling:
+The following meta labels are available on targets during relabeling at the moment:
 
 * `__meta_packet_billing_cycle`
 * `__meta_packet_facility`
