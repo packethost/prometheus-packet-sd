@@ -36,7 +36,7 @@ import (
 var (
 	a         = kingpin.New("sd adapter usage", "Tool to generate Prometheus file_sd target files for Packet.")
 	outputf   = a.Flag("output.file", "The output filename for file_sd compatible file.").Default("packet.json").String()
-	projectid = a.Flag("packet.projectid", "Packet project ID.").Envar("PACKET_PROJECT_ID").Required().String()
+	projectid = a.Flag("packet.projectid", "Packet project ID.").String()
 	token     = a.Flag("packet.authtoken", "Packet auth token.").Envar("PACKET_AUTH_TOKEN").Required().String()
 	refresh   = a.Flag("target.refresh", "The refresh interval (in seconds).").Default("30").Int()
 	port      = a.Flag("target.port", "The default port number for targets.").Default("9100").Int()
@@ -147,17 +147,41 @@ func (d *packetDiscoverer) createTarget(device *packngo.Device) *targetgroup.Gro
 			model.LabelName(labelName("public_ipv4")):   model.LabelValue(networkInfo.PublicIPv4),
 			model.LabelName(labelName("public_ipv6")):   model.LabelValue(networkInfo.PublicIPv6),
 			model.LabelName(labelName("tags")):          model.LabelValue(tags),
+			model.LabelName(labelName("project_id")):    model.LabelValue(device.Project.ID),
 		},
 	}
 }
 
 func (d *packetDiscoverer) getTargets() ([]*targetgroup.Group, error) {
 	now := time.Now()
-	devices, _, err := d.client.Devices.List(*projectid, nil)
-	requestDuration.Observe(time.Since(now).Seconds())
-	if err != nil {
-		requestFailures.Inc()
-		return nil, err
+	devices := []packngo.Device{}
+	if *projectid == "" {
+		projects, _, err := d.client.Projects.List(nil)
+		requestDuration.Observe(time.Since(now).Seconds())
+
+		if err != nil {
+			requestFailures.Inc()
+			return nil, err
+		}
+		for _, p := range projects {
+			now = time.Now()
+			ds, _, err := d.client.Devices.List(p.ID, nil)
+			requestDuration.Observe(time.Since(now).Seconds())
+			if err != nil {
+				requestFailures.Inc()
+				return nil, err
+			}
+			devices = append(devices, ds...)
+		}
+
+	} else {
+		ds, _, err := d.client.Devices.List(*projectid, nil)
+		requestDuration.Observe(time.Since(now).Seconds())
+		if err != nil {
+			requestFailures.Inc()
+			return nil, err
+		}
+		devices = ds
 	}
 
 	level.Debug(d.logger).Log("msg", "get devices", "nb", len(devices))
