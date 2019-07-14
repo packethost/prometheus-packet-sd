@@ -68,6 +68,11 @@ The following meta labels are available on targets during relabeling at the mome
 * `__meta_packet_public_ipv6`
 * `__meta_packet_state`
 * `__meta_packet_tags`
+* `__meta_packet_project_id`
+* `__meta_packet_project_name`
+* `__meta_packet_organization_id`
+* `__meta_packet_organization_name`
+* `__meta_packet_operating_system`
 
 
 

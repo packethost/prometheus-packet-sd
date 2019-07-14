@@ -138,16 +138,20 @@ func (d *packetDiscoverer) createTarget(device *packngo.Device) *targetgroup.Gro
 		Labels: model.LabelSet{
 			model.AddressLabel: model.LabelValue(addr),
 
-			model.LabelName(labelName("hostname")):      model.LabelValue(device.Hostname),
-			model.LabelName(labelName("state")):         model.LabelValue(device.State),
-			model.LabelName(labelName("billing_cycle")): model.LabelValue(device.BillingCycle),
-			model.LabelName(labelName("plan")):          model.LabelValue(device.Plan.Slug),
-			model.LabelName(labelName("facility")):      model.LabelValue(device.Facility.Code),
-			model.LabelName(labelName("private_ipv4")):  model.LabelValue(networkInfo.PrivateIPv4),
-			model.LabelName(labelName("public_ipv4")):   model.LabelValue(networkInfo.PublicIPv4),
-			model.LabelName(labelName("public_ipv6")):   model.LabelValue(networkInfo.PublicIPv6),
-			model.LabelName(labelName("tags")):          model.LabelValue(tags),
-			model.LabelName(labelName("project_id")):    model.LabelValue(device.Project.ID),
+			model.LabelName(labelName("hostname")):          model.LabelValue(device.Hostname),
+			model.LabelName(labelName("state")):             model.LabelValue(device.State),
+			model.LabelName(labelName("billing_cycle")):     model.LabelValue(device.BillingCycle),
+			model.LabelName(labelName("plan")):              model.LabelValue(device.Plan.Slug),
+			model.LabelName(labelName("facility")):          model.LabelValue(device.Facility.Code),
+			model.LabelName(labelName("private_ipv4")):      model.LabelValue(networkInfo.PrivateIPv4),
+			model.LabelName(labelName("public_ipv4")):       model.LabelValue(networkInfo.PublicIPv4),
+			model.LabelName(labelName("public_ipv6")):       model.LabelValue(networkInfo.PublicIPv6),
+			model.LabelName(labelName("tags")):              model.LabelValue(tags),
+			model.LabelName(labelName("device_id")):         model.LabelValue(device.ID),
+			model.LabelName(labelName("project_id")):        model.LabelValue(device.Project.ID),
+			model.LabelName(labelName("project_name")):      model.LabelValue(device.Project.Name),
+			model.LabelName(labelName("organization_name")): model.LabelValue(device.Project.Organization.Name),
+			model.LabelName(labelName("operating_system")):  model.LabelValue(device.OS.Slug),
 		},
 	}
 }
@@ -155,8 +159,9 @@ func (d *packetDiscoverer) createTarget(device *packngo.Device) *targetgroup.Gro
 func (d *packetDiscoverer) getTargets() ([]*targetgroup.Group, error) {
 	now := time.Now()
 	devices := []packngo.Device{}
+	lopts := packngo.ListOptions{Includes: []string{"project.organization"}}
 	if *projectid == "" {
-		projects, _, err := d.client.Projects.List(nil)
+		projects, _, err := d.client.Projects.List(&lopts)
 		requestDuration.Observe(time.Since(now).Seconds())
 
 		if err != nil {
@@ -165,7 +170,7 @@ func (d *packetDiscoverer) getTargets() ([]*targetgroup.Group, error) {
 		}
 		for _, p := range projects {
 			now = time.Now()
-			ds, _, err := d.client.Devices.List(p.ID, nil)
+			ds, _, err := d.client.Devices.List(p.ID, &lopts)
 			requestDuration.Observe(time.Since(now).Seconds())
 			if err != nil {
 				requestFailures.Inc()
