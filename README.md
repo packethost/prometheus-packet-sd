@@ -44,12 +44,12 @@ $ ./prometheus-packet-sd --packet.projectid 508b7fd3-0df2-4837-b0df-65aaf09f642a
 
 You can also pass the project ID in envvar `PACKET_PROJECT_ID`.
 
+The program runs a Prometheus registry itself, and reports histogram of packet API request duration, and number of API failures. See the [main.go](main.go) for the exact label names. If you want to scrape this from a running, docker container, you should expose the port, i.e. add `-p 9465:9465` to the `docker run` command.
+
 
 ## Integration with Prometheus
 
-Here is a Prometheus `scrape_config` snippet that configures Prometheus to scrape node_exporter assuming that it is deployed on all your Packet servers.
-
-TODO: update this section
+Here is a Prometheus `scrape_config` snippet that configures Prometheus to scrape node_exporter assuming that it is deployed on all your Packet servers, and listening on port 9100.
 
 ```yaml
 - job_name: node
