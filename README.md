@@ -12,11 +12,31 @@ You need your Packet Auth token. You can create the token [in the Packet web app
 
 Make sure the Packet Auth Token is in envvar `PACKET_AUTH_TOKEN`.
 
-## Installing it
+## Running it
+
+### With docker
+
+First, export your `PACKET_AUTH_TOKEN` to an environment variable and then:
+
+```
+$ docker run -e PACKET_AUTH_TOKEN -v ${PWD}:/tmp quay.io/packet/prometheus-packet-sd --output.file=/tmp/packet.json
+```
+
+.. file `packet.json` cointaining device labels will appear in current directory.
+
+### With the binary from Github Releases
 
 Download the binary from the [Releases](https://github.com/packethost/prometheus-packet-sd/releases) page.
 
-## Running it
+
+```
+$ ./prometheus-packet-sd
+```
+
+.. device labels will be in `./packet.json`
+
+
+If you only want to scrape a single project, you can pass project ID:
 
 ```
 $ ./prometheus-packet-sd --packet.projectid 508b7fd3-0df2-4837-b0df-65aaf09f642a
