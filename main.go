@@ -63,7 +63,9 @@ var (
 )
 
 func init() {
-	reg.MustRegister(prometheus.NewProcessCollector(os.Getpid(), ""))
+	reg.MustRegister(
+		prometheus.NewProcessCollector(prometheus.ProcessCollectorOpts{}),
+	)
 	reg.MustRegister(prometheus.NewGoCollector())
 	reg.MustRegister(version.NewCollector("prometheus_packet_sd"))
 	reg.MustRegister(requestDuration)
