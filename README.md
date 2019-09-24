@@ -62,7 +62,7 @@ Here is a Prometheus `scrape_config` snippet that configures Prometheus to scrap
   # - overwrite the scrape address with the node_exporter's port.
   # - strip leading commas from the tags label.
   # - save the facility label
-  # - save the hostname label
+  # - save the instance label
   relabel_configs:
   - source_labels: [__meta_packet_public_ipv4]
     replacement: "${1}:9100"
@@ -73,7 +73,7 @@ Here is a Prometheus `scrape_config` snippet that configures Prometheus to scrap
   - source_labels: [__meta_packet_facility]
     target_label: facility
   - source_labels: [__meta_packet_hostname]
-    target_label: hostname
+    target_label: instance
 
 ```
 
