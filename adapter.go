@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 	"reflect"
 
 	"github.com/go-kit/kit/log"
@@ -95,8 +94,7 @@ func (a *Adapter) writeOutput() error {
 	arr := mapToArray(a.groups)
 	b, _ := json.MarshalIndent(arr, "", "    ")
 
-	dir, _ := filepath.Split(a.output)
-	tmpfile, err := ioutil.TempFile(dir, "sd-adapter")
+	tmpfile, err := ioutil.TempFile("", "sd-adapter")
 	if err != nil {
 		return err
 	}
