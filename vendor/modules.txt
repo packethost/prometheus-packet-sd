@@ -159,7 +159,7 @@ github.com/modern-go/concurrent
 github.com/modern-go/reflect2
 # github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f
 github.com/mwitkow/go-conntrack
-# github.com/packethost/packngo v0.1.1-0.20190814142431-3f3bfdfcb88b
+# github.com/packethost/packngo v0.1.1-0.20190927135007-02a3ebac54fc
 github.com/packethost/packngo
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors

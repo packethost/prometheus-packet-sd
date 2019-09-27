@@ -150,6 +150,7 @@ func (d *packetDiscoverer) createTarget(device *packngo.Device) *targetgroup.Gro
 			model.LabelName(labelName("public_ipv6")):       model.LabelValue(networkInfo.PublicIPv6),
 			model.LabelName(labelName("tags")):              model.LabelValue(tags),
 			model.LabelName(labelName("device_id")):         model.LabelValue(device.ID),
+			model.LabelName(labelName("short_id")):          model.LabelValue(device.ShortID),
 			model.LabelName(labelName("project_id")):        model.LabelValue(device.Project.ID),
 			model.LabelName(labelName("project_name")):      model.LabelValue(device.Project.Name),
 			model.LabelName(labelName("organization_name")): model.LabelValue(device.Project.Organization.Name),

@@ -9,7 +9,7 @@ require (
 	github.com/gophercloud/gophercloud v0.4.0 // indirect
 	github.com/hashicorp/consul/api v1.2.0 // indirect
 	github.com/miekg/dns v1.1.17 // indirect
-	github.com/packethost/packngo v0.1.1-0.20190814142431-3f3bfdfcb88b
+	github.com/packethost/packngo v0.1.1-0.20190927135007-02a3ebac54fc
 	github.com/prometheus/client_golang v1.1.0
 	github.com/prometheus/common v0.7.0
 	github.com/prometheus/prometheus v0.0.0-20190818123050-43acd0e2e93f
