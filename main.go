@@ -34,13 +34,14 @@ import (
 )
 
 var (
-	a         = kingpin.New("sd adapter usage", "Tool to generate Prometheus file_sd target files for Packet.")
-	outputf   = a.Flag("output.file", "The output filename for file_sd compatible file.").Default("packet.json").String()
-	projectid = a.Flag("packet.projectid", "Packet project ID.").String()
-	token     = a.Flag("packet.authtoken", "Packet auth token.").Envar("PACKET_AUTH_TOKEN").Required().String()
-	refresh   = a.Flag("target.refresh", "The refresh interval (in seconds).").Default("30").Int()
-	port      = a.Flag("target.port", "The default port number for targets.").Default("9100").Int()
-	listen    = a.Flag("web.listen-address", "The listen address.").Default(":9465").String()
+	a          = kingpin.New("sd adapter usage", "Tool to generate Prometheus file_sd target files for Packet.")
+	outputf    = a.Flag("output.file", "The output filename for file_sd compatible file.").Default("packet.json").String()
+	projectid  = a.Flag("packet.projectid", "Packet project ID.").String()
+	token      = a.Flag("packet.authtoken", "Packet auth token.").Envar("PACKET_AUTH_TOKEN").Required().String()
+	refresh    = a.Flag("target.refresh", "The refresh interval (in seconds).").Default("30").Int()
+	port       = a.Flag("target.port", "The default port number for targets.").Default("9100").Int()
+	listen     = a.Flag("web.listen-address", "The listen address.").Default(":9465").String()
+	startcheck = a.Flag("packet.startcheck", "Do a probe read API request on startup.").Default("True").Bool()
 
 	packetPrefix = model.MetaLabelPrefix + "packet_"
 )
@@ -252,10 +253,12 @@ func main() {
 
 	client := packngo.NewClientWithAuth("prometheus_sd", *token, nil)
 
-	_, _, err = client.Projects.List(nil)
-	if err != nil {
-		fmt.Println("failed to check Packet credentials:", err)
-		os.Exit(1)
+	if *startcheck {
+		_, _, err = client.Projects.List(nil)
+		if err != nil {
+			fmt.Println("failed to check Packet credentials:", err)
+			os.Exit(1)
+		}
 	}
 
 	ctx := context.Background()
