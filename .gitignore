@@ -5,6 +5,7 @@
 *.so
 *.dylib
 prometheus-packet-sd
+packet.json
 
 # Test binary, build with `go test -c`
 *.test

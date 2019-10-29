@@ -1,6 +1,6 @@
 module github.com/packethost/prometheus-packet-sd
 
-go 1.12
+go 1.13
 
 require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
@@ -9,7 +9,7 @@ require (
 	github.com/gophercloud/gophercloud v0.4.0 // indirect
 	github.com/hashicorp/consul/api v1.2.0 // indirect
 	github.com/miekg/dns v1.1.17 // indirect
-	github.com/packethost/packngo v0.1.1-0.20190927135007-02a3ebac54fc
+	github.com/packethost/packngo v0.2.1-0.20191029185435-d9c902099869
 	github.com/prometheus/client_golang v1.1.0
 	github.com/prometheus/common v0.7.0
 	github.com/prometheus/prometheus v0.0.0-20190818123050-43acd0e2e93f
