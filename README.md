@@ -79,22 +79,22 @@ Here is a Prometheus `scrape_config` snippet that configures Prometheus to scrap
 
 The following meta labels are available on targets during relabeling at the moment:
 
-* `__meta_packet_hostname`
-* `__meta_packet_state`
 * `__meta_packet_billing_cycle`
-* `__meta_packet_plan`
-* `__meta_packet_facility`
-* `__meta_packet_private_ipv4`
-* `__meta_packet_public_ipv4`
-* `__meta_packet_public_ipv6`
-* `__meta_packet_tags`
 * `__meta_packet_device_id`
-* `__meta_packet_short_id`
+* `__meta_packet_facility`
+* `__meta_packet_hostname`
+* `__meta_packet_operating_system`
+* `__meta_packet_organization_name`
+* `__meta_packet_plan`
+* `__meta_packet_private_ipv4`
 * `__meta_packet_project_id`
 * `__meta_packet_project_name`
-* `__meta_packet_organization_name`
-* `__meta_packet_operating_system`
+* `__meta_packet_public_ipv4`
+* `__meta_packet_public_ipv6`
+* `__meta_packet_short_id`
+* `__meta_packet_state`
 * `__meta_packet_switch_uuid
+* `__meta_packet_tags`
 
 
 
