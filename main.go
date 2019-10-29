@@ -156,6 +156,7 @@ func (d *packetDiscoverer) createTarget(device *packngo.Device) *targetgroup.Gro
 			model.LabelName(labelName("project_name")):      model.LabelValue(device.Project.Name),
 			model.LabelName(labelName("organization_name")): model.LabelValue(device.Project.Organization.Name),
 			model.LabelName(labelName("operating_system")):  model.LabelValue(device.OS.Slug),
+			model.LabelName(labelName("switch_uuid")):       model.LabelValue(device.SwitchUUID),
 		},
 	}
 }

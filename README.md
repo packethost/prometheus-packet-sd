@@ -94,6 +94,7 @@ The following meta labels are available on targets during relabeling at the mome
 * `__meta_packet_project_name`
 * `__meta_packet_organization_name`
 * `__meta_packet_operating_system`
+* `__meta_packet_switch_uuid
 
 
 
