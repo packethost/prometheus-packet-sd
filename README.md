@@ -1,4 +1,4 @@
-A service discovery for the [Packet](https://www.packet.com/) platform compatible with [Prometheus](https://prometheus.io).
+A service discovery for the [Equinix Metal](https://metal.equinix.com) platform compatible with [Prometheus](https://prometheus.io).
 
 It's based on the [Scaleway adapter](https://github.com/scaleway/prometheus-scw-sd).
 
@@ -8,9 +8,9 @@ This service gets the list of servers from the Packet API and generates a file w
 
 ## Pre-requisites
 
-You need your Packet Auth token. You can create the token [in the Packet web app](https://app.packet.net), click on your profile photo and navigate to "API Keys".
+You need your Equinix Metal Auth token. You can create the token [in the Equinix Metal web app](https://console.equinixmetal.com), click on your profile photo and navigate to "API Keys".
 
-Make sure the Packet Auth Token is in envvar `PACKET_AUTH_TOKEN`.
+Make sure the Equinix Metal Auth Token is in envvar `PACKET_AUTH_TOKEN`.
 
 ## Running it
 
@@ -44,12 +44,12 @@ $ ./prometheus-packet-sd --packet.projectid 508b7fd3-0df2-4837-b0df-65aaf09f642a
 
 You can also pass the project ID in envvar `PACKET_PROJECT_ID`.
 
-The program runs a Prometheus registry itself, and reports histogram of packet API request duration, and number of API failures. See the [main.go](main.go) for the exact label names. If you want to scrape this from a running, docker container, you should expose the port, i.e. add `-p 9465:9465` to the `docker run` command.
+The program runs a Prometheus registry itself, and reports histogram of Equinix Metal API request duration, and number of API failures. See the [main.go](main.go) for the exact label names. If you want to scrape this from a running, docker container, you should expose the port, i.e. add `-p 9465:9465` to the `docker run` command.
 
 
 ## Integration with Prometheus
 
-Here is a Prometheus `scrape_config` snippet that configures Prometheus to scrape node_exporter assuming that it is deployed on all your Packet servers, and listening on port 9100.
+Here is a Prometheus `scrape_config` snippet that configures Prometheus to scrape node_exporter assuming that it is deployed on all your Equinix Metal servers, and listening on port 9100.
 
 ```yaml
 - job_name: node
@@ -95,8 +95,6 @@ The following meta labels are available on targets during relabeling at the mome
 * `__meta_packet_state`
 * `__meta_packet_switch_uuid
 * `__meta_packet_tags`
-
-
 
 ## Contributing
 
