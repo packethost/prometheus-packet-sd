@@ -105,15 +105,16 @@ func (a *Adapter) writeOutput() error {
 		return err
 	}
 
+	err = os.Chmod(a.output, 0666)
+	if err != nil {
+		return err
+	}
+
 	err = os.Rename(tmpfile.Name(), a.output)
 	if err != nil {
 		return err
 	}
 
-	err = os.Chmod(a.output, 0666)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
