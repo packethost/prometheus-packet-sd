@@ -105,7 +105,7 @@ func (a *Adapter) writeOutput() error {
 		return err
 	}
 
-	err = os.Chmod(a.output, 0666)
+	err = os.Chmod(a.output, 0644)
 	if err != nil {
 		return err
 	}
