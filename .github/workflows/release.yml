@@ -1,31 +1,37 @@
-on:
-  release:
-    types: [created]
+name: Generate Next Release
+# This workflow will generate changelog and release notes.
+# Source: https://github.com/terraform-aws-modules/terraform-aws-vpc/blob/master/.github/workflows/release.yml
 
-permissions:
-    contents: write
-    packages: write
+on:
+  workflow_dispatch:
 
 jobs:
-  release-linux-amd64:
-    name: release linux/amd64
+  release:
+    name: Release
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        goos: [linux, windows, darwin]
-        goarch: [amd64, arm64]
-        exclude:
-          - goarch: arm64
-            goos: windows  
-          - goarch: arm64
-            goos: darwin
     steps:
-    - uses: actions/checkout@v3
-    - uses: wangyoucao577/go-release-action@v1
-      with:
-        compress_assets: OFF
-        asset_name: prometheus-packet-sd-${{ matrix.goos }}-${{ matrix.goarch }}  
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: ${{ matrix.goos }}
-        goarch: ${{ matrix.goarch }}
-        goversion: 1.13
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.19.x
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Release
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          semantic_version: 19.0.5
+          extra_plugins: |
+            @semantic-release/exec@6.0.3
+            @semantic-release/git@10.0.0
+            conventional-changelog-conventionalcommits@4.6.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: equinix-labs@auto-commit-workflow
+          GIT_AUTHOR_EMAIL: bot@equinix.noreply.github.com
+          GIT_COMMITTER_NAME: equinix-labs@auto-commit-workflow
+          GIT_COMMITTER_EMAIL: bot@equinix.noreply.github.com
+          RELEASE_REQUESTER: "@${{ github.event.sender.login }}"
